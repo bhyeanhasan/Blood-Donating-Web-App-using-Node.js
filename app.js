@@ -24,12 +24,11 @@ let bodyParser = require('body-parser');
     app.use(bodyParser.urlencoded({ extended: false }));
     app.use(bodyParser.json());
 
-// app.use(cookieParser);
-// app.use(session({
-//     secret: 'sdnjdsnvjdsuhdsufhudshfuhds',
-//     resave:false,
-//     saveUninitialized:false
-// }));
+app.use(cookieParser());
+app.use(session({
+    secret: 'sdnjdsnvjdsuhdsufhudshfuhds',
+    saveUninitialized:false
+}));
 // app.use(passport.initialize());
 // app.use(passport.session());
 // app.use(flash());

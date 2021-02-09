@@ -1,0 +1,25 @@
+<%- include('../_parts/_header') -%>
+
+<div>
+
+    <form method="POST" action="/update_now">
+        <% members.forEach((member)=>{ %>
+        <input type="text"  name="name" value="<%-member.name -%>">
+        <br>
+        <input type="text"  name="mobile" value="<%- member.mobile -%>">
+        <br>
+        <input type="text"  name="faculty" value="<%- member.faculty -%>">
+        <br>
+        <input type="text"  name="session" value="<%- member.session%>">
+        <br>
+        <input type="text"  name="blood" value="<%- member.blood%>">
+        <br>
+        <input type="email"  name="email" value="<%- member.email%>">
+        <br>
+        <input type="submit">
+            <% }); %>
+    </form>
+
+</div>
+
+<%- include('../_parts/_footer') -%>

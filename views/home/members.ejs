@@ -1,0 +1,22 @@
+<%- include('../_parts/_header'); %>
+
+<div class="container">
+    <h1 class="text-center">Members</h1>
+</div>
+
+<div class="container">
+    <div class="row">
+        <% members.forEach((member)=>{ %>
+        <div class="col-md-12 p-4">
+                <p>Name: <%- member.name -%><br>
+                Mobile: <%- member.mobile -%><br>
+                Faculty: <%- member.faculty -%><br>
+                Session: <%- member.session -%><br>
+                Blood Group: <%- member.blood -%><br>
+                Email: <%- member.email -%></p>
+        </div>
+        <% }); %>
+    </div>
+</div>
+
+<%- include('../_parts/_footer'); %>

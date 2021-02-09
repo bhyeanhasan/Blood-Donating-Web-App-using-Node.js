@@ -6,16 +6,59 @@ let router = express.Router()
 
 
 router.get('/',(req,res)=>{
-    // res.send('hello world');
+
     res.render('home/home');
 });
 
-router.get('/contact',(req,res)=>{
-    res.send('babul hasan');
+router.get('/update',(req,res)=>{
+
+
+    res.render('home/update');
 });
 
-router.get('/about',(req,res)=>{
-    res.send('node js');
+router.post('/update',(req,res,next)=>{
+    let email = req.body.email;
+
+    member.find({email: email},
+        function(err, members){
+            res.render('home/update_information',{members});
+            console.log(members);
+        });
+});
+
+router.post('/update_now',(req,res)=>{
+        let name= req.body.name;
+        let mobile= req.body.mobile;
+        let faculty= req.body.faculty;
+        let session= req.body.session;
+        let blood= req.body.blood;
+        let email= req.body.email;
+
+    member.findOneAndUpdate({email: email}, {name: name,mobile:mobile,faculty:faculty,session:session,blood:blood}, function(err, response) {
+        if(err)
+        {
+            res.json(err);
+        }
+        else {
+            res.json("Success");
+        }
+    });
+});
+
+router.get('/members',(req,res)=>{
+    member.find(function(err, members){
+        res.render('home/members',{ members });
+    });
+});
+
+router.get('/delete',(req,res)=> {
+    res.render('home/delete');
+
+});
+
+router.post('/delete',(req,res)=>{
+    member.remove({"email": req.body.myvar});
+    console.log("ok");
 });
 
 
@@ -40,11 +83,22 @@ router.post('/goto',(req,res,next)=>{
 
     });
 
-    res.json(newUser);
+    newUser.save((err,member)=>{
+        if (err)
+        {
+            res.json(err);
+        }
+        else {
+            res.json(member);
+        }
 
-    newUser.save();
+    });
 
 });
 
+
+router.get('*', function(req, res){
+    res.send('Sorry, this is an invalid URL.');
+});
 
 module.exports = router;
