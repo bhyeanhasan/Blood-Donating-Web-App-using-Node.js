@@ -9,10 +9,15 @@
 
 
 <nav class="navbar navbar-expand-md navbar-light bg-light">
+
         <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
                 <a class="nav-link" href="/">Home</a>
             </li>
+        </ul>
+
+        <ul class="navbar-nav ml-auto">
+
             <li class="nav-item">
                 <a class="nav-link" href="/members">All Members</a>
             </li>
@@ -23,15 +28,24 @@
                 <a class="nav-link" href="/delete">Delete</a>
             </li>
 
-        </ul>
 
-        <ul class="navbar-nav ml-auto">
-            <li class="nav-item">
-                <a class="nav-link" href="/login">Login</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/register">Register</a>
-            </li>
+
+            <% if(who != undefined){ %>
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout">logout</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/register"><%- who.name%></a>
+                </li>
+            <% } else {%>
+                <li class="nav-item">
+                    <a class="nav-link" href="/login">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/register">Register</a>
+                </li>
+            <% } %>
+
         </ul>
 
 </nav>

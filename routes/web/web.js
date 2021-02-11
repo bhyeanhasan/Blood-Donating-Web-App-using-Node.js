@@ -4,29 +4,63 @@ let member = require('../../models/member');
 let bodyParser = require('body-parser');
 let router = express.Router()
 
+// Get Request manage part:
 
-router.get('/',(req,res)=>{
+    // homepage
+    router.get('/',(req,res)=>{
+        let who =req.session.member;
+        res.render('home/home',{who});
+    });
+    // view all members, user must be logged in
+    router.get('/members',(req,res)=>{
+        let who =req.session.member;
+        let ok ="Please log in first";
+        if(! who)  res.redirect("/");
+        else {
+            member.find(function(err, members){
+                res.render('home/members',{ members ,who});
+            });
+        }
+    });
+    // goto delete page
+    router.get('/delete',(req,res)=> {
+        let who =req.session.member;
+        res.render('home/delete',{who});
+    });
 
-    res.render('home/home');
-});
+    router.get('/update',(req,res)=>{
+        let who =req.session.member;
+        res.render('home/update',{who});
+    });
 
-router.get('/update',(req,res)=>{
+    router.get('/login',(req,res)=>{
+        let who =req.session.member;
+        res.render('home/login',{who});
+    });
 
+    router.get('/register',(req,res)=>{
+        let who =req.session.member;
+        res.render('home/register',{who});
+    });
 
-    res.render('home/update');
-});
+    router.get('*', function(req, res){
+        let who =req.session.member;
+        res.send('Sorry, this is an invalid URL.');
+    });
 
-router.post('/update',(req,res,next)=>{
-    let email = req.body.email;
+// Post Request manage part:
 
-    member.find({email: email},
-        function(err, members){
-            res.render('home/update_information',{members});
-            console.log(members);
+    router.post('/update',(req,res,next)=>{
+        let email = req.body.email;
+        let who =req.session.member;
+
+        member.find({email: email},
+            function(err, members){
+                res.render('home/update_information',{members,who});
         });
-});
+    });
 
-router.post('/update_now',(req,res)=>{
+    router.post('/update_now',(req,res)=>{
         let name= req.body.name;
         let mobile= req.body.mobile;
         let faculty= req.body.faculty;
@@ -34,71 +68,80 @@ router.post('/update_now',(req,res)=>{
         let blood= req.body.blood;
         let email= req.body.email;
 
-    member.findOneAndUpdate({email: email}, {name: name,mobile:mobile,faculty:faculty,session:session,blood:blood}, function(err, response) {
-        if(err)
-        {
-            res.json(err);
-        }
-        else {
-            res.json("Success");
-        }
-    });
-});
-
-router.get('/members',(req,res)=>{
-    member.find(function(err, members){
-        res.render('home/members',{ members });
-    });
-});
-
-router.get('/delete',(req,res)=> {
-    res.render('home/delete');
-
-});
-
-router.post('/delete',(req,res)=>{
-    member.remove({"email": req.body.myvar});
-    console.log("ok");
-});
-
-
-router.get('/login',(req,res)=>{
-    res.render('home/login')
-});
-
-router.get('/register',(req,res)=>{
-    res.render('home/register')
-});
-
-router.post('/goto',(req,res,next)=>{
-
-    let newUser = new member({
-        name: req.body.name,
-        mobile: req.body.mobile,
-        faculty: req.body.faculty,
-        session: req.body.session,
-        blood: req.body.blood,
-        password: req.body.password,
-        email: req.body.email
-
+        member.findOneAndUpdate({email: email}, {name: name,mobile:mobile,faculty:faculty,session:session,blood:blood}, function(err, response) {
+            if(err)
+            {
+                res.json(err);
+            }
+            else {
+                res.json("Success");
+            }
+        });
     });
 
-    newUser.save((err,member)=>{
-        if (err)
-        {
-            res.json(err);
-        }
-        else {
-            res.json(member);
-        }
-
+    router.post('/delete',(req,res)=>{
+        member.findOneAndDelete({"email": req.body.email},(err,ok)=>{
+            if(err)
+            {
+                res.json(err);
+            }
+            else{
+                res.redirect('/members');
+            }
+        });
     });
 
-});
+    router.post('/login', (req,res)=>{
+        let email = req.body.email;
+        let password = req.body.password;
+        member.findOne({email:email},(err,Member)=>{
+            if(err){
+                console.log(err);
+            }
+            else if(!Member)
+            {
+                res.json("NOT FOUND");
+            }
+            else
+            {
+                if(Member.password === password ) {
+                    req.session.member = Member;
+                    res.redirect("/");
+                }
+                else{
+                    res.json("failed");
+                }
+            }
+        });
+    })
 
+    router.get('/logout',(req,res)=>{
+        req.session.destroy(function(){
+            res.redirect('/');
+        });
+    });
 
-router.get('*', function(req, res){
-    res.send('Sorry, this is an invalid URL.');
-});
+    router.post('/goto',(req,res,next)=>{
+        let newUser = new member(
+    {
+            name: req.body.name,
+            mobile: req.body.mobile,
+            faculty: req.body.faculty,
+            session: req.body.session,
+            blood: req.body.blood,
+            password: req.body.password,
+            email: req.body.email
+        });
+        newUser.save((err,member)=>{
+            if (err)
+            {
+                res.json(err);
+            }
+            else
+            {
+                res.json(member);
+            }
+        });
+    });
 
 module.exports = router;

@@ -4,7 +4,8 @@
     <h1>Badhon PSTU</h1>
 </div>
 
-
-
+<% if(who != undefined){ %>
+    <p><%- who.name%></p>
+<% } %>
 
 <%- include('../_parts/_footer'); %>
