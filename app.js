@@ -29,6 +29,7 @@ app.use(session({
     secret: 'sdnjdsnvjdsuhdsufhudshfuhds',
     saveUninitialized:false
 }));
+mongoose.set('useFindAndModify', false);
 // app.use(passport.initialize());
 // app.use(passport.session());
 // app.use(flash());
@@ -37,13 +38,15 @@ app.use(session({
 // Views setup
     app.set("views",path.join(__dirname,'views'));
     app.set("view engine", "ejs");
-
+    app.use(express.static("public"));
 
 // Route Setup
     app.use('/', require('./routes/web'));
     app.use('/api',require('./routes/api'));
     // let route = require("./routes");
     // app.use(route);
+
+
 
 
 // Server Setup

@@ -43,10 +43,17 @@ let router = express.Router()
         res.render('home/register',{who});
     });
 
-    router.get('*', function(req, res){
-        let who =req.session.member;
-        res.send('Sorry, this is an invalid URL.');
+    router.get('/logout',(req,res)=>{
+        req.session.destroy((err,ok)=>{
+            res.redirect('/');
+        });
     });
+
+
+    // router.get('*', function(req, res){
+    //     let who =req.session.member;
+    //     res.send('Sorry, this is an invalid URL.');
+    // });
 
 // Post Request manage part:
 
@@ -115,11 +122,6 @@ let router = express.Router()
         });
     })
 
-    router.get('/logout',(req,res)=>{
-        req.session.destroy(function(){
-            res.redirect('/');
-        });
-    });
 
     router.post('/goto',(req,res,next)=>{
         let newUser = new member(

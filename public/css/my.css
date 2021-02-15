@@ -1,0 +1,11 @@
+.navbar{
+    background: #474141;
+}
+.nav-link{
+    background: #ee5959;
+    border: bisque;
+    border-radius: 20px;
+    margin-left: 10px;
+    padding: 10px;
+    text-align: center;
+}
