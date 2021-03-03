@@ -18,13 +18,25 @@ router.get('/members',(req,res)=>{
 });
 
 router.post('/members',(req,res)=>{
-    let obj ={
-        name:req.body.name,
-        id : req.body.id
-    };
-   res.json({
-       ok:obj
-   });
+    let newUser =new member({
+        name: req.body.name,
+        mobile: req.body.mobile,
+        faculty: req.body.faculty,
+        session: req.body.session,
+        blood: req.body.blood,
+        email: req.body.email,
+        password: req.body.password
+    });
+    newUser.save((err,member)=>{
+        if (err)
+        {
+            res.json(err);
+        }
+        else
+        {
+            res.status(200).json("Member Successfully added");
+        }
+    });
 });
 
 
